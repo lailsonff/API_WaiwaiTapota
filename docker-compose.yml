@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    command: python3 project/app.py  # --reload --workers 1 --host 0.0.0.0 --port 8000
+    environment:
+      PORT: 5000
+      DB_URL: mongodb://mongo
+      DB_PORT: 27017
+      DB_NAME: waiwaitapota
+      DB_USER: 
+      DB_PASSWORD:
+      SECRET_KEY: 
+      ACCESS_TOKEN_EXPIRES:
+      REFRESH_TOKEN_EXPIRES:
+      REDIS_HOST:
+      REDIS_DB:
+      REDIS_PORT:
+    ports:
+      - 5000:5000
+    volumes:
+      - ./backend:/home/backend/project
+    depends_on:
+      - mongo
+    restart: always
+  mongo:
+    image: mongo:4.4.18
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 
+      MONGO_INITDB_ROOT_PASSWORD: 
+      MONGODB_APPLICATION_DATABASE: 
+    ports:
+      - 27017:27017
+  redis:
+    image: redis:7.0.7
+    ports:
+      - 6379:6379
+  # https://stackoverflow.com/questions/45255066/create-networks-automatically-in-docker-compose
+  # https://docs.docker.com/compose/networking/
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:localhost@mongo:27017/
